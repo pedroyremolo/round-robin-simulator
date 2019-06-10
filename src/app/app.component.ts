@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Process } from './shared/models/process.model';
+import {Component} from '@angular/core';
+import {Process} from './shared/models/process.model';
 
 @Component({
   selector: 'app-root',
@@ -8,13 +8,15 @@ import { Process } from './shared/models/process.model';
 })
 export class AppComponent {
   private inputProcess: Process = new Process('', 0, 0);
-  private processControl = [];
+  private processControl: Process[] = [];
+  private totalTime = 0;
 
-  constructor() { }
+  constructor() {
+  }
 
   addProcess() {
     this.processControl.push(this.inputProcess);
-    console.log(this.processControl);
+    this.totalTime += this.inputProcess.executionTime;
     this.inputProcess = new Process('', 0, 0);
   }
 }

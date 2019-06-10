@@ -1,17 +1,17 @@
 <div class="container-fluid">
-  <div class="row">
+  <div class="row cockpit">
     <div class="col-sm-4">
       <form>
         <div class="form-group">
-          <label for="name">Process Name</label>
+          <label for="name">Nome do Processo</label>
           <input class="form-control" type="text" name="name" id="name" [(ngModel)]="inputProcess.name">
         </div>
         <div class="form-group">
-          <label for="arrival-time">Arrival Time</label>
+          <label for="arrival-time">Tempo de Chegada</label>
           <input class="form-control" type="number" name="arrival-time" id="arrival-time" [(ngModel)]="inputProcess.arrivalTime">
         </div>
         <div class="form-group">
-          <label for="execute-time">Execute Time</label>
+          <label for="execute-time">Tempo de Execução</label>
           <input class="form-control" type="number" name="execute-time" id="execute-time" [(ngModel)]="inputProcess.executionTime">
         </div>
         <button class="btn btn-primary" (click)="addProcess()">Add</button>
@@ -28,8 +28,19 @@
           </tr>
         </thead>
         <tbody>
-          <tr></tr>
+          <tr *ngFor="let process of processControl;index as i;">
+            <td>{{process.name}}</td>
+            <td>{{process.arrivalTime}}</td>
+            <td>{{process.executionTime}}</td>
+            <td></td>
+          </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3">Tempo Total</td>
+            <td>{{totalTime}}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
