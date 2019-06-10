@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Process } from './shared/models/process.model';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  title = 'round-robin-simulator';
+  private inputProcess: Process = new Process('', 0, 0);
+  private processControl = [];
+
+  constructor() { }
+
+  addProcess() {
+    this.processControl.push(this.inputProcess);
+    console.log(this.processControl);
+    this.inputProcess = new Process('', 0, 0);
+  }
 }
