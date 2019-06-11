@@ -14,9 +14,20 @@ export class AppComponent {
   constructor() {
   }
 
-  addProcess() {
+  addProcess(): void {
     this.processControl.push(this.inputProcess);
+    this.processControl.sort(
+      (a, b) => a.arrivalTime >= b.arrivalTime ? 1 : -1
+    );
+    console.log(this.processControl);
     this.totalTime += this.inputProcess.executionTime;
     this.inputProcess = new Process('', 0, 0);
+  }
+
+  calculateTotalTime(): void {
+    /*TODO
+    * Implementar para o caso em que a execução se tornar ociosa
+    * Ex: Quando o tempo de chegada for depois do término do quantum do último processo executado
+    * */
   }
 }
