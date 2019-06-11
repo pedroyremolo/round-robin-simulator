@@ -61,4 +61,14 @@
     </div>
   </div>
   <button (click)="runRoundRobin()">Run</button>
+  <div class="col-sm-12">
+    <table class="table table-bordered">
+      <tbody>
+        <tr *ngFor="let linha of matrizExecucao;">
+          <td *ngFor="let mark of linha;" ngClass="{'green': mark == 1, 'white': mark == 0}">             
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
