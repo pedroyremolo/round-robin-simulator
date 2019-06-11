@@ -10,7 +10,7 @@ export class AppComponent {
   private processControl: Process[] = [];
   private inputProcess: Process = new Process(this.processControl.length, '', 0, 0);
   private totalTime = 0;
-  quantum = 1;
+  quantum = 2;
 
   constructor() {
   }
@@ -165,16 +165,17 @@ export class AppComponent {
 
   private executaQuantum(filaDeExecucao: Process[], tempo: number, matrizExecucao: any[][]) {
     if (filaDeExecucao.length > 0) {
-      while ((tempo % this.quantum) !== 0 && filaDeExecucao[0].executionTime !== 0) {
-        filaDeExecucao[0].executionTime--;
-
+      let quantumRestante = this.quantum;
+      while (quantumRestante > 0 && filaDeExecucao[0].executionTime > 0) {
         // Marca Matriz no tempo, 1 quando executar, 0 caso contrario
         matrizExecucao.forEach((linhaDoTempoProcesso, index) => {
+          console.log(linhaDoTempoProcesso);
           index === filaDeExecucao[0].pid ?
-            linhaDoTempoProcesso[tempo].push(1) :
-            linhaDoTempoProcesso[tempo].push(0);
+            linhaDoTempoProcesso[tempo] = 1 :
+            linhaDoTempoProcesso[tempo] = 0;
         });
-
+        filaDeExecucao[0].executionTime--;
+        quantumRestante--;
         tempo++;
       }
     }
