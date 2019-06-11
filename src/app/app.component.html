@@ -25,6 +25,13 @@
         </div>
         <button class="btn btn-primary" (click)="addProcess()">Add</button>
       </form>
+      <form class="form">
+        <div class="form-group">
+          <label for="quantum">Quantum</label>
+          <input class="form-control" type="number" name="quantum" id="quantum"
+                 [(ngModel)]="quantum">
+        </div>
+      </form>
     </div>
     <div class="col-sm-8">
       <table class="table table-bordered">
