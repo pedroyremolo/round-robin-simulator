@@ -7,10 +7,10 @@ import {Process} from './shared/models/process.model';
   styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-  private inputProcess: Process = new Process('', 0, 0);
   private processControl: Process[] = [];
+  private inputProcess: Process = new Process(this.processControl.length, '', 0, 0);
   private totalTime = 0;
-  quantum;
+  quantum = 1;
 
   constructor() {
   }
@@ -22,27 +22,63 @@ export class AppComponent {
     );
     console.log(this.processControl);
     this.totalTime += this.inputProcess.executionTime;
-    this.inputProcess = new Process('', 0, 0);
+    this.inputProcess = new Process(this.processControl.length, '', 0, 0);
   }
 
   runRoundRobin() {
-    const numberProcess = this.processControl.length;
+    /* quantum
+    *  tempo
+    *  fila_de_execucao
+    *  fila de espera
+    *  fila_concluido
+    *  matriz_de_execucao[processos,tempo]
+    *
+    * enquanto conclusao.length != numero_de_processos
+    *   checa_processos_espera_pronto
+    *   executa_quantum_processo marcando matriz_execucao[processo,tempo]
+    *   caso processo terminado
+    *     move -> fila_concluido
+    *   caso contrario
+    *     move -> final da fila_execucao
+    *   incrementa tempo
+    * */
+
+    let tempo = 0;
+    let filaDeEspera = [...this.processControl];
+    let filaDeExecucao: Process[] = [];
+    let filaDeConcluido: Process[] = [];
+    let matrizExecucao = [...this.processControl.map(() => [])];
+
+    while (filaDeConcluido.length !== this.processControl.length) {
+      this.checaProcessosProntos(filaDeEspera, filaDeExecucao, tempo);
+
+      this.executaQuantum(filaDeExecucao, tempo, matrizExecucao);
+
+      filaDeExecucao[0].executionTime === 0 ?
+        filaDeConcluido.push(filaDeExecucao.shift()) :
+        filaDeExecucao.push(filaDeExecucao.shift());
+    }
+
+    console.log(matrizExecucao);
+
+    /*const numeroDeProcessos = this.processControl.length;
     const chegada = [];
     const execucao = [];
     const espera = [];
     const conclusao = [];
-    let tempo = 0;
+    //let tempo = 0;
     let sequencia = '';
 
     // Cria listas de tempo de execução e chegada
-    for (let i = 0; i < numberProcess; i++) {
+    for (let i = 0; i < numeroDeProcessos; i++) {
       chegada[i] = this.processControl[i].arrivalTime;
       execucao[i] = this.processControl[i].executionTime;
     }
 
+    // Calcula os dados do Round Robin
     while (true) {
       let flag = true;
-      for (let i = 0; i < numberProcess; i++) {
+      for (let i = 0; i < numeroDeProcessos; i++) {
 
         if (chegada[i] <= tempo) {
 
@@ -66,7 +102,7 @@ export class AppComponent {
             }
           } else if (chegada[i] > this.quantum) {
 
-            for (let j = 0; j < numberProcess; j++) {
+            for (let j = 0; j < numeroDeProcessos; j++) {
 
               if (chegada[j] < chegada[i]) {
 
@@ -111,11 +147,37 @@ export class AppComponent {
           i--;
         }
       }
+      console.log(sequencia);
       if (flag) {
         break;
       }
-    }
+    }*/
 
+  }
+
+  private checaProcessosProntos(filaDeEspera: Process[], filaDeExecucao: Process[], tempo: number) {
+    filaDeEspera.forEach((process, index, fila) => {
+      if (process.arrivalTime <= tempo) {
+        filaDeExecucao.push(fila.shift());
+      }
+    });
+  }
+
+  private executaQuantum(filaDeExecucao: Process[], tempo: number, matrizExecucao: any[][]) {
+    if (filaDeExecucao.length > 0) {
+      while ((tempo % this.quantum) !== 0 && filaDeExecucao[0].executionTime !== 0) {
+        filaDeExecucao[0].executionTime--;
+
+        // Marca Matriz no tempo, 1 quando executar, 0 caso contrario
+        matrizExecucao.forEach((linhaDoTempoProcesso, index) => {
+          index === filaDeExecucao[0].pid ?
+            linhaDoTempoProcesso[tempo].push(1) :
+            linhaDoTempoProcesso[tempo].push(0);
+        });
+
+        tempo++;
+      }
+    }
   }
 
   calculateTotalTime(): void {

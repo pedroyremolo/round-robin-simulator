@@ -1,5 +1,5 @@
 export class Process {
-  constructor(public name: string, public arrivalTime: number, public executionTime: number) {
+  constructor(public pid: number, public name: string, public arrivalTime: number, public executionTime: number) {
 
   }
 }
