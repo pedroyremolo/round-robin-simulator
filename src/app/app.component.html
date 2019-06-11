@@ -65,7 +65,8 @@
     <table class="table table-bordered">
       <tbody>
         <tr *ngFor="let linha of matrizExecucao;">
-          <td *ngFor="let mark of linha;" ngClass="{'green': mark == 1, 'white': mark == 0}">             
+          <td *ngFor="let mark of linha;">
+            <p>{{mark}}</p>
           </td>
         </tr>
       </tbody>

@@ -11,6 +11,8 @@ export class AppComponent {
   private inputProcess: Process = new Process(this.processControl.length, '', 0, 0);
   private totalTime = 0;
   quantum = 2;
+  tempo = 0;
+  matrizExecucao = [];
 
   constructor() {
   }
@@ -43,16 +45,17 @@ export class AppComponent {
     *   incrementa tempo
     * */
     console.log(this.quantum);
-    let tempo = 0;
     let filaDeEspera = [...this.processControl];
     let filaDeExecucao: Process[] = [];
     let filaDeConcluido: Process[] = [];
     let matrizExecucao = [...this.processControl.map(() => [])];
 
     while (filaDeConcluido.length !== this.processControl.length) {
-      this.checaProcessosProntos(filaDeEspera, filaDeExecucao, tempo);
+      this.checaProcessosProntos(filaDeEspera, filaDeExecucao);
 
-      this.executaQuantum(filaDeExecucao, tempo, matrizExecucao);
+      this.executaQuantum(filaDeExecucao, matrizExecucao);
+
+      this.checaProcessosProntos(filaDeEspera, filaDeExecucao);
 
       filaDeExecucao[0].executionTime === 0 ?
         filaDeConcluido.push(filaDeExecucao.shift()) :
@@ -60,18 +63,19 @@ export class AppComponent {
     }
 
     console.log(matrizExecucao);
+    this.matrizExecucao = matrizExecucao;
 
   }
 
-  private checaProcessosProntos(filaDeEspera: Process[], filaDeExecucao: Process[], tempo: number) {
+  private checaProcessosProntos(filaDeEspera: Process[], filaDeExecucao: Process[]) {
     filaDeEspera.forEach((process, index, fila) => {
-      if (process.arrivalTime <= tempo) {
+      if (process.arrivalTime <= this.tempo) {
         filaDeExecucao.push(fila.shift());
       }
     });
   }
 
-  private executaQuantum(filaDeExecucao: Process[], tempo: number, matrizExecucao: any[][]) {
+  private executaQuantum(filaDeExecucao: Process[], matrizExecucao: any[][]) {
     if (filaDeExecucao.length > 0) {
       let quantumRestante = this.quantum;
       while (quantumRestante > 0 && filaDeExecucao[0].executionTime > 0) {
@@ -79,12 +83,12 @@ export class AppComponent {
         matrizExecucao.forEach((linhaDoTempoProcesso, index) => {
           console.log(linhaDoTempoProcesso);
           index === filaDeExecucao[0].pid ?
-            linhaDoTempoProcesso[tempo] = 1 :
-            linhaDoTempoProcesso[tempo] = 0;
+            linhaDoTempoProcesso[this.tempo] = 1 :
+            linhaDoTempoProcesso[this.tempo] = 0;
         });
         filaDeExecucao[0].executionTime--;
         quantumRestante--;
-        tempo++;
+        this.tempo++;
       }
     }
   }
